@@ -67,7 +67,7 @@ app.post('/show', (req, res) => {
 
 app.get('/send', function(req, res) {
     var mailOptions = {
-        from: "FORTEC <fortecservidoremail@gmail.com>",
+        from: "SERVIDOR <servidoremail@gmail.com>",
         bcc: req.query.bcc,
         subject: req.query.subject,
         text: req.query.text,
