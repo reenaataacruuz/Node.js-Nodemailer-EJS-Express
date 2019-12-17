@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lançando Notas Acadêmicas</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <style>
+        #customers td,
+        #customers th {
+            padding: 3px;
+            width: 170px;
+        }
+        
+        #customers tr:hover {
+            background-color: #E0FFFF;
+        }
+        
+        #customers th {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            text-align: left;
+        }
+        
+        input[type="text"] {
+            border: 2px solid purple;
+            border-radius: 10px;
+            height: 22px;
+            width: 230px;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            var from, bcc, subject, text, tic1;
+            tic1 = $("#tic1").val();
+
+            $("#send_email").click(function() {
+                bcc = `<% data.forEach(function(details) { %>
+                    <%= details.email %> ,
+                        <% }) %> `
+
+                console.log("to", bcc)
+                subject = "Notas Lançadas! ";
+                text = "";
+
+                $("#message").text("Enviando Email");
+                $.get("http://localhost:3000/send", {
+                    bcc: bcc,
+                    subject: subject,
+                    text: text
+                }, function(data) {
+                    if (data == "sent") {
+                        $("#message").empty().html("Email foi enviado com sucesso");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body style="padding: 20px 80px 75px; background-color: #F0FFF0;">
+    <h3>Lista de Alunos:</h3>
+    <div>
+        <table id="customers">
+            <thead>
+                <tr>
+                    <th>Matrícula: </th>
+                    <th>Nome: </th>
+                    <th>TIC 1: </th>
+                    <th>TIC 2: </th>
+                    <th>Trabalho: </th>
+                    <th>Prova: </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function(details) { %>
+                    <tr>
+                        <td>
+                            <%= details.matricula %>
+                        </td>
+                        <td>
+                            <%= details.name %>
+                        </td>
+                        <td>
+                            <input id="tic1" type="text" style="width:50px" value="<%= details.tic1 %>" />
+                        </td>
+                        <td>
+                            <input id="tic2" type="text" style="width:50px" value="<%= details.tic2 %>" />
+                        </td>
+                        <td>
+                            <input id="trab" type="text" style="width:60px" value="<%= details.trab %>" />
+                        </td>
+                        <td>
+                            <input id="prova" type="text" style="width:50px" value="<%= details.prova %>" />
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <br>
+
+    <div id="container" style="text-align: center;">
+        <button id="send_email">Enviar Email</button><br>
+        <span id="message"></span>
+    </div>
+    </div>
+</body>
+
+</html>
